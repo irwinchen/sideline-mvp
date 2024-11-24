@@ -48,8 +48,8 @@ export default function HomePage() {
         {/* Testimonial */}
         <div className="bg-white rounded-lg p-8 mt-16 shadow-sm">
           <p className="text-slate-700 italic">
-            "Finally, I can travel and dine out without anxiety about my food
-            allergies."
+            &quot;Finally, I can travel and dine out without anxiety about my
+            food allergies.&quot;
           </p>
           <div className="mt-4">
             <p className="font-semibold text-slate-900">Sarah M.</p>

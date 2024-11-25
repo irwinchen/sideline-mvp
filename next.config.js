@@ -1,13 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
+  reactStrictMode: true,
+  swcMinify: true,
   images: {
     unoptimized: true,
+    domains: [
+      // Add your image domains here
+    ],
   },
+  experimental: {
+    // Enable if you're using app directory
+    appDir: true,
+  },
+  // Add any environment variables you need to expose to the browser
   env: {
-    NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
-      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    // Your env vars here
   },
 };
 

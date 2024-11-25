@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap --config next-sitemap.config.js",
     "start": "next start",
     "lint": "next lint"
   },
@@ -45,5 +46,13 @@
   "engines": {
     "node": ">=18.x",
     "npm": ">=9.x"
+  },
+  "overrides": {
+    "rimraf": "^5.0.0",
+    "inflight": "^2.0.0"
+  },
+  "resolutions": {
+    "rimraf": "^5.0.0",
+    "inflight": "^2.0.0"
   }
 }

@@ -127,11 +127,11 @@ const TermsAndConditions = ({ onAccept }: TermsAndConditionsProps) => {
                     We never sell your personal information
                   </li>
                   <li className="text-sm text-muted-foreground">
-                    We don't share your phone number - it's only used for
-                    profile lookup by verified commercial providers
+                    We don&apos;t share your phone number - it&apos;s only used
+                    for profile lookup by verified commercial providers
                   </li>
                   <li className="text-sm text-muted-foreground">
-                    Your profile link is pseudonymous - it doesn't contain
+                    Your profile link is pseudonymous - it doesn&apos;t contain
                     personally identifiable information
                   </li>
                   <li className="text-sm text-muted-foreground">

@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     }
 
     const data = await req.json();
-
+    console.log(data);
     // TODO: Save profile data to your database
     // This will depend on your database setup (e.g., Supabase, PostgreSQL)
 

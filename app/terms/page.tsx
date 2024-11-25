@@ -8,7 +8,8 @@ export default function TermsPage() {
     profileShareConsent: boolean;
   }) => {
     "use server";
-    // Handle the consents, e.g., save to database
+    // Save consents to database
+    console.log("Saving consents:", consents); // Temporary usage until DB implementation
     redirect("/onboarding");
   };
 

@@ -27,8 +27,8 @@ export default async function OnboardingPage() {
             Set Up Your Profile
           </h1>
           <p className="text-muted-foreground">
-            Let's create your dietary profile to help you communicate your needs
-            effectively
+            Let&apos;s create your dietary profile to help you communicate your
+            needs effectively
           </p>
         </div>
 

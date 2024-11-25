@@ -1,4 +1,5 @@
 import { SignUp } from "@clerk/nextjs";
+import { Card } from "@/components/ui/card";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,38 +10,36 @@ export const metadata: Metadata = {
 
 export default function SignUpPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-md mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-slate-800 mb-4">
-              Create Your Profile
-            </h1>
-            <p className="text-slate-600">
-              Join Sideline to communicate your dietary needs effectively
-            </p>
-          </div>
-
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-sm">
-            <SignUp
-              appearance={{
-                elements: {
-                  rootBox: "w-full",
-                  card: "bg-transparent shadow-none",
-                  headerTitle: "text-slate-800 font-bold",
-                  headerSubtitle: "text-slate-600",
-                  formButtonPrimary:
-                    "bg-indigo-600 hover:bg-indigo-700 text-white transition-colors",
-                  formFieldInput:
-                    "rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-indigo-500",
-                  footerAction: "text-slate-600",
-                  footerActionLink: "text-indigo-600 hover:text-indigo-700",
-                },
-              }}
-              redirectUrl="/onboarding"
-            />
-          </div>
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100 p-4 md:p-24">
+      <div className="container max-w-md space-y-8">
+        <div className="space-y-4 text-center">
+          <h1 className="text-3xl font-bold text-slate-900">
+            Create Your Profile
+          </h1>
+          <p className="text-muted-foreground">
+            Join Sideline to communicate your dietary needs effectively
+          </p>
         </div>
+
+        <Card className="bg-white/80 backdrop-blur-sm p-6">
+          <SignUp
+            appearance={{
+              elements: {
+                rootBox: "w-full",
+                card: "bg-transparent shadow-none",
+                headerTitle: "text-slate-900 font-bold",
+                headerSubtitle: "text-muted-foreground",
+                formButtonPrimary:
+                  "bg-primary hover:bg-primary/90 text-primary-foreground transition-colors",
+                formFieldInput:
+                  "rounded-lg border-input focus:border-primary focus:ring-primary",
+                footerAction: "text-muted-foreground",
+                footerActionLink: "text-primary hover:text-primary/90",
+              },
+            }}
+            redirectUrl="/onboarding"
+          />
+        </Card>
       </div>
     </main>
   );

@@ -1329,19 +1329,80 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   output: "standalone",
+
+  // Optimize image handling
   images: {
     unoptimized: true,
-    domains: [
-      // Add your image domains here
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.clerk.com",
+      },
+      // Add any other domains you need for images
     ],
   },
+
+  // Remove experimental flag since app directory is stable in Next.js 14
   experimental: {
-    // Enable if you're using app directory
-    appDir: true,
+    // Note: removing appDir flag as it's now stable in Next.js 14
+    serverActions: true,
   },
-  // Add any environment variables you need to expose to the browser
-  env: {
-    // Your env vars here
+
+  // These headers are important for a medical data application
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains",
+          },
+          {
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ];
+  },
+
+  // Configure redirects for clean URLs
+  async redirects() {
+    return [
+      {
+        source: "/home",
+        destination: "/",
+        permanent: true,
+      },
+    ];
+  },
+
+  // Webpack configuration for better build optimization
+  webpack: (config, { isServer }) => {
+    // Optimize bundle size
+    config.optimization = {
+      ...config.optimization,
+      moduleIds: "deterministic",
+    };
+
+    return config;
   },
 };
 
@@ -1391,36 +1452,27 @@ export default nextConfig;
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.460.0",
-    "next": "14.x",
-    "react": "18.x",
-    "react-dom": "18.x",
+    "next": "14.0.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "shadcn-ui": "^0.2.3",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@shadcn/ui": "^0.0.4",
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18",
-    "eslint": "^8",
+    "@types/node": "20.10.0",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
+    "eslint": "8.54.0",
     "eslint-config-next": "14.0.3",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5.0.0"
+    "postcss": "8.4.31",
+    "tailwindcss": "3.3.5",
+    "typescript": "5.3.2"
   },
   "engines": {
     "node": "18.x",
     "npm": "9.x"
-  },
-  "overrides": {
-    "rimraf": "^5.0.0",
-    "inflight": "1.0.6"
-  },
-  "resolutions": {
-    "inflight": "1.0.6",
-    "@babel/core": "^7.23.0",
-    "webpack": "^5.89.0"
   }
 }
 

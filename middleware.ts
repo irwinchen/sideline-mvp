@@ -14,22 +14,33 @@ const publicRoutes = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, req) => {
   try {
+    console.log("Middleware executing for path:", req.nextUrl.pathname);
+
     if (publicRoutes(req)) {
+      console.log("Public route accessed:", req.nextUrl.pathname);
       return NextResponse.next();
     }
 
     const { userId } = await auth();
+    console.log("Auth completed, userId:", userId ? "exists" : "null");
 
     if (!userId) {
+      console.log("Redirecting to sign in");
       const signInUrl = new URL("/sign-in", req.url);
       signInUrl.searchParams.set("redirect_url", req.url);
       return NextResponse.redirect(signInUrl);
     }
 
     return NextResponse.next();
-  } catch (error) {
-    console.error("Middleware error:", error);
-    // During development, you might want to still allow the request
+  } catch (err) {
+    // Type guard for Error objects
+    const error = err as Error;
+    console.error("Middleware error:", {
+      message: error?.message || "Unknown error",
+      stack: error?.stack || "No stack trace",
+      url: req.url,
+    });
+    // Still return next() to prevent complete site breakage
     return NextResponse.next();
   }
 });

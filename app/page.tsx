@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { QrCode, Globe, Shield, Share2 } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "components/ui/card";
+import { Button } from "components/ui/button";
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100 p-4 md:p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100 p-4 md:p-24">
       <div className="container space-y-16 text-center">
+        {/* Brand Title */}
+        <h1 className="text-5xl font-bold text-primary">Sideline</h1>
+
         {/* Hero Section */}
         <div className="space-y-8">
           <h1 className="text-4xl font-bold text-slate-900">

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Providers } from "./providers";
-import { ErrorBoundary } from "@/components/error-boundary";
+import { ErrorBoundary } from "components/error-boundary";
+import Navigation from "components/ui/navigation";
+import Footer from "components/ui/footer";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -27,14 +29,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log("RootLayout rendering"); // Add this line
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full flex flex-col`}
       >
         <ErrorBoundary>
-          <Providers>{children}</Providers>
+          <Providers>
+            <Navigation />
+            <main className="flex-1 pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+              <div className="py-8">{children}</div>
+            </main>
+            <Footer />
+          </Providers>
         </ErrorBoundary>
       </body>
     </html>

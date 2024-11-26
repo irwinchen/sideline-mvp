@@ -6,22 +6,32 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+} from "components/ui/card";
+import { Button } from "components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
+import { Label } from "components/ui/label";
+import { Input } from "components/ui/input";
+import { Checkbox } from "components/ui/checkbox";
+import { Alert, AlertDescription } from "components/ui/alert";
 import { Apple, Utensils, AlertTriangle } from "lucide-react";
+import ProgressSteps from "components/ui/progress-steps";
+
+const onboardingSteps = [
+  { id: 1, label: "Create Account", completed: true },
+  { id: 2, label: "Dietary Profile", current: true },
+  { id: 3, label: "Preferences" },
+  { id: 4, label: "Review" },
+];
 
 export default async function OnboardingPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100 p-4 md:p-24">
-      <div className="container max-w-2xl space-y-8">
+    <main className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100">
+      <ProgressSteps steps={onboardingSteps} currentStep={2} />
+
+      <div className="flex-1 container max-w-2xl mx-auto px-4 py-8 space-y-8">
         <div className="space-y-4 text-center">
           <h1 className="text-3xl font-bold text-slate-900">
             Set Up Your Profile
@@ -129,7 +139,7 @@ export default async function OnboardingPage() {
 
           <CardFooter className="flex flex-col space-y-4">
             <Button className="w-full" size="lg">
-              Save Profile
+              Continue to Preferences
             </Button>
             <Button variant="outline" className="w-full" size="lg">
               <Apple className="mr-2 h-4 w-4" />

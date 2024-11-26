@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "preinstall": "npx only-allow npm",
     "build": "next build",
-    "postbuild": "next-sitemap --config next-sitemap.config.js",
     "start": "next start",
     "lint": "next lint"
   },
@@ -45,14 +44,15 @@
   },
   "engines": {
     "node": ">=18.0.0",
-    "npm": ">=9.x"
+    "npm": ">=9.0.0"
   },
   "overrides": {
     "rimraf": "^5.0.0",
-    "inflight": "^2.0.0"
+    "inflight": "1.0.6"
   },
   "resolutions": {
-    "rimraf": "^5.0.0",
-    "inflight": "^2.0.0"
+    "inflight": "1.0.6",
+    "@babel/core": "^7.23.0",
+    "webpack": "^5.89.0"
   }
 }

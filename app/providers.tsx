@@ -8,6 +8,7 @@ const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
+    // @ts-ignore -- Clerk types issue
     <ClerkProvider>
       <QueryClientProvider client={queryClient}>
         {children}

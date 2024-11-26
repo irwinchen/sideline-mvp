@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.17.0",
     "@clerk/nextjs": "^6.5.0",
+    "@clerk/themes": "^2.1.48",
     "@clerk/types": "^4.35.0",
     "@next/font": "^14.2.15",
     "@radix-ui/react-checkbox": "^1.1.2",
@@ -24,7 +26,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.460.0",
-    "next": "14.0.3",
+    "next": "^14.2.18",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "shadcn-ui": "^0.2.3",
@@ -36,8 +38,10 @@
     "@types/node": "20.10.0",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",
-    "eslint": "8.54.0",
-    "eslint-config-next": "14.0.3",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.0.3",
     "postcss": "8.4.31",
     "tailwindcss": "3.3.5",
     "typescript": "5.3.2"

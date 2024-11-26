@@ -7,6 +7,8 @@ const publicRoutes = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/api/webhook(.*)", // Allow webhook endpoints
+  "/terms",
+  "/privacy",
   "/_next(.*)", // Allow Next.js internal routes
   "/favicon.ico",
   "/sitemap.xml",
@@ -14,37 +16,39 @@ const publicRoutes = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, req) => {
   try {
-    console.log("Middleware executing for path:", req.nextUrl.pathname);
-
+    // Early return for public routes
     if (publicRoutes(req)) {
-      console.log("Public route accessed:", req.nextUrl.pathname);
       return NextResponse.next();
     }
 
     const { userId } = await auth();
-    console.log("Auth completed, userId:", userId ? "exists" : "null");
 
+    // Redirect to sign in if no user
     if (!userId) {
-      console.log("Redirecting to sign in");
       const signInUrl = new URL("/sign-in", req.url);
       signInUrl.searchParams.set("redirect_url", req.url);
       return NextResponse.redirect(signInUrl);
     }
 
     return NextResponse.next();
-  } catch (err) {
-    // Type guard for Error objects
-    const error = err as Error;
-    console.error("Middleware error:", {
-      message: error?.message || "Unknown error",
-      stack: error?.stack || "No stack trace",
-      url: req.url,
-    });
-    // Still return next() to prevent complete site breakage
+  } catch (error) {
+    console.error("Middleware error:", error);
+    // In production, you might want to redirect to an error page instead
     return NextResponse.next();
   }
 });
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    "/((?!_next/static|_next/image|favicon.ico|public/).*)",
+    // Always run for API routes
+    "/(api|trpc)(.*)",
+  ],
 };

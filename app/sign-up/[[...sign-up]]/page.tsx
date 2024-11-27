@@ -21,12 +21,12 @@ export default function SignUpPage() {
           </p>
         </div>
 
-        <Card className="bg-white/80 backdrop-blur-sm p-6">
+        <Card className="bg-white/80 backdrop-blur-sm p-0 border-0">
           <SignUp
             appearance={{
               elements: {
                 rootBox: "w-full",
-                card: "bg-transparent shadow-none",
+                card: "bg-transparent shadow-none p-6",
                 headerTitle: "text-slate-900 font-bold",
                 headerSubtitle: "text-muted-foreground",
                 formButtonPrimary:
@@ -35,6 +35,8 @@ export default function SignUpPage() {
                   "rounded-lg border-input focus:border-primary focus:ring-primary",
                 footerAction: "text-muted-foreground",
                 footerActionLink: "text-primary hover:text-primary/90",
+                form: "gap-6",
+                formField: "gap-2",
               },
             }}
             redirectUrl="/onboarding"

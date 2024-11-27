@@ -6,22 +6,24 @@ import ChatInterface from "components/ui/chat-interface";
 import RestrictionsChecklist from "components/ui/restrictions-checklist";
 import { Button } from "components/ui/button";
 
-const onboardingSteps = [
-  { id: 1, label: "Create Account", completed: true },
-  { id: 2, label: "Dietary Profile", current: true },
-  { id: 3, label: "Preferences" },
-  { id: 4, label: "Review" },
-];
+export default function TestPage() {
+  const testSteps = [
+    { id: 1, label: "Step 1", completed: true },
+    { id: 2, label: "Step 2", current: true },
+    { id: 3, label: "Step 3" },
+    { id: 4, label: "Step 4" },
+  ];
 
-type Restriction = {
-  item: string;
-  type: "cannot" | "willnot";
-};
+  const [restrictions, setRestrictions] = useState<
+    {
+      item: string;
+      type: "cannot" | "willnot";
+    }[]
+  >([]);
 
-export default function OnboardingPage() {
-  const [restrictions, setRestrictions] = useState<Restriction[]>([]);
-
-  const handleUpdateRestrictions = (newRestrictions: Restriction[]) => {
+  const handleUpdateRestrictions = (
+    newRestrictions: { item: string; type: "cannot" | "willnot" }[]
+  ) => {
     setRestrictions((prev) => {
       const updatedRestrictions = [...prev];
 
@@ -57,10 +59,12 @@ export default function OnboardingPage() {
 
   return (
     <main className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100">
-      <ProgressSteps steps={onboardingSteps} currentStep={2} />
+      <div className="py-8">
+        <ProgressSteps steps={testSteps} currentStep={2} />
+      </div>
 
-      <div className="flex-1 container mx-auto py-4">
-        <div className="text-center mb-4">
+      <div className="flex-1 container mx-auto px-4 py-8">
+        <div className="space-y-4 text-center mb-8">
           <h1 className="text-3xl font-bold text-slate-900">
             Set Up Your Profile
           </h1>
@@ -71,19 +75,23 @@ export default function OnboardingPage() {
 
         <div
           className="bg-white rounded-lg shadow-lg overflow-hidden"
-          style={{ height: "calc(100vh - 240px)" }}
+          style={{ height: "calc(100vh - 400px)", minHeight: "500px" }}
         >
-          <div className="grid grid-cols-2 h-full">
-            <ChatInterface onUpdateRestrictions={handleUpdateRestrictions} />
-            <RestrictionsChecklist
-              restrictions={restrictions}
-              onRemoveRestriction={handleRemoveRestriction}
-              onToggleType={handleToggleType}
-            />
+          <div className="grid grid-cols-2 h-full divide-x">
+            <div className="flex flex-col h-full">
+              <ChatInterface onUpdateRestrictions={handleUpdateRestrictions} />
+            </div>
+            <div className="flex flex-col h-full">
+              <RestrictionsChecklist
+                restrictions={restrictions}
+                onRemoveRestriction={handleRemoveRestriction}
+                onToggleType={handleToggleType}
+              />
+            </div>
           </div>
         </div>
 
-        <div className="flex justify-end mt-4 space-x-4">
+        <div className="flex justify-end mt-8 space-x-4">
           <Button variant="outline">Back</Button>
           <Button>Continue to Preferences</Button>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2 } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 
 interface Step {
   id: number;
@@ -16,69 +16,69 @@ interface ProgressStepsProps {
 
 const ProgressSteps = ({ steps, currentStep }: ProgressStepsProps) => {
   return (
-    <div className="w-full py-4 sm:py-6">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Progress">
-          <ol
-            role="list"
-            className="flex items-center justify-between gap-4 sm:gap-8"
-          >
-            {steps.map((step, index) => {
-              const isCompleted = step.completed || currentStep > step.id;
-              const isCurrent = currentStep === step.id;
+    <div className="w-full flex justify-center py-8 sm:py-12">
+      <div className="w-full max-w-3xl px-4">
+        <div className="flex items-center">
+          {steps.map((step, index) => {
+            const isCompleted = step.completed || currentStep > step.id;
+            const isCurrent = currentStep === step.id;
+            const isLast = index === steps.length - 1;
 
-              return (
-                <li
-                  key={step.id}
-                  className={`relative flex-1 ${
-                    index !== steps.length - 1 ? "pr-8 sm:pr-12" : ""
-                  }`}
+            return (
+              <div
+                key={step.id}
+                className={`
+                  flex-1 flex flex-col items-center relative
+                  ${
+                    !isLast
+                      ? "after:content-[''] after:absolute after:top-4 after:left-[calc(50%+16px)] after:w-full after:h-[2px] after:-translate-y-1/2 " +
+                        (isCompleted ? "after:bg-black" : "after:bg-gray-200")
+                      : ""
+                  }
+                `}
+                style={{
+                  minWidth: "120px",
+                }}
+              >
+                <div
+                  className={`
+                    relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2
+                    transition-colors duration-300
+                    ${
+                      isCompleted
+                        ? "border-black bg-black text-white"
+                        : isCurrent
+                        ? "border-black bg-white"
+                        : "border-gray-200 bg-gray-100"
+                    }
+                  `}
                 >
-                  <div className="flex items-center justify-start">
-                    <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                        isCompleted
-                          ? "bg-primary text-white"
-                          : isCurrent
-                          ? "border-2 border-primary bg-white"
-                          : "border-2 border-gray-300 bg-white"
-                      }`}
-                    >
-                      {isCompleted ? (
-                        <CheckCircle2 className="h-5 w-5" />
-                      ) : (
-                        <span
-                          className={`text-sm font-medium ${
-                            isCurrent ? "text-primary" : "text-gray-500"
-                          }`}
-                        >
-                          {step.id}
-                        </span>
-                      )}
-                    </div>
+                  {isCompleted ? (
+                    <CheckIcon className="h-4 w-4 text-white" />
+                  ) : (
                     <span
-                      className={`ml-3 text-sm font-medium ${
-                        isCompleted || isCurrent
-                          ? "text-primary"
-                          : "text-gray-500"
+                      className={`text-sm ${
+                        isCurrent
+                          ? "font-bold text-black"
+                          : "font-medium text-gray-500"
                       }`}
                     >
-                      {step.label}
+                      {step.id}
                     </span>
-                  </div>
-
-                  {index !== steps.length - 1 && (
-                    <div
-                      className={`absolute right-0 top-4 h-0.5 w-full max-w-[calc(100%-2rem)] sm:max-w-[calc(100%-3rem)] ${
-                        isCompleted ? "bg-primary" : "bg-gray-300"
-                      }`}
-                    />
                   )}
-                </li>
-              );
-            })}
-          </ol>
-        </nav>
+                </div>
+                <span
+                  className={`
+                    mt-2 text-sm font-medium text-center px-2
+                    ${isCompleted || isCurrent ? "text-black" : "text-gray-500"}
+                  `}
+                >
+                  {step.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

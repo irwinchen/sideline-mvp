@@ -20,7 +20,7 @@ const Navigation = () => {
   const navLinks = [
     { href: "/about", label: "About" },
     { href: "/how-it-works", label: "How It Works" },
-    { href: "/contact", label: "Contact" },
+    { href: "/providers", label: "Providers" },
   ];
 
   const handleSignInClick = () => {

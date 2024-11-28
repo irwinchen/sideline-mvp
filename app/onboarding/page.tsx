@@ -71,7 +71,7 @@ export default function OnboardingPage() {
 
         <div
           className="bg-white rounded-lg shadow-lg overflow-hidden"
-          style={{ height: "calc(100vh - 240px)" }}
+          style={{ height: "80vh" }}
         >
           <div className="grid grid-cols-2 h-full">
             <ChatInterface onUpdateRestrictions={handleUpdateRestrictions} />

@@ -4,16 +4,15 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "./button";
-import { Menu, X, User, LogIn } from "lucide-react";
+import { Menu, X, LogIn } from "lucide-react";
 import SignInModal from "./sign-in-modal";
+import { UserButton, useUser } from "@clerk/nextjs";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   const pathname = usePathname();
-
-  // TODO: Replace with actual auth state management
-  const isAuthenticated = false;
+  const { isSignedIn } = useUser();
 
   const isActive = (path: string) => pathname === path;
 
@@ -53,10 +52,8 @@ const Navigation = () => {
                   {link.label}
                 </Link>
               ))}
-              {isAuthenticated ? (
-                <Button variant="ghost" size="icon" className="ml-4">
-                  <User className="h-5 w-5" />
-                </Button>
+              {isSignedIn ? (
+                <UserButton afterSignOutUrl="/" />
               ) : (
                 <Button
                   variant="ghost"
@@ -106,15 +103,10 @@ const Navigation = () => {
                 </Link>
               ))}
               <div className="px-3 py-2">
-                {isAuthenticated ? (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full justify-start"
-                  >
-                    <User className="h-5 w-5 mr-2" />
-                    Profile
-                  </Button>
+                {isSignedIn ? (
+                  <div className="px-3">
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
                 ) : (
                   <Button
                     variant="ghost"

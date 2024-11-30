@@ -57,7 +57,7 @@ export default function RestrictionsChecklist({
         <h2 className="text-lg font-semibold">Your Dietary Restrictions</h2>
       </div>
 
-      <ScrollArea className="h-[calc(100%-4rem)] p-4">
+      <ScrollArea className="h-[400px] p-4">
         {Object.entries(groupedRestrictions).map(([type, items]) => (
           <div key={type} className="mb-6">
             <h3 className="text-sm font-medium text-slate-500 mb-2">{type}</h3>

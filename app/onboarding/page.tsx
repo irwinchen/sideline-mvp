@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import ProgressSteps from "components/ui/progress-steps";
 import ChatInterface from "components/ui/chat-interface";
 import RestrictionsChecklist from "components/ui/restrictions-checklist";
@@ -19,7 +21,35 @@ type Restriction = {
 };
 
 export default function OnboardingPage() {
+  const { isSignedIn, user, isLoaded } = useUser();
+  const router = useRouter();
   const [restrictions, setRestrictions] = useState<Restriction[]>([]);
+  const [hasProfile, setHasProfile] = useState(false);
+
+  useEffect(() => {
+    if (isLoaded) {
+      if (!isSignedIn) {
+        router.push("/");
+        return;
+      }
+
+      // Check if user has completed profile (this is a placeholder - implement your actual profile check)
+      const checkProfile = async () => {
+        try {
+          const response = await fetch("/api/profile");
+          const data = await response.json();
+          if (data.completed) {
+            router.push("/profile");
+          }
+          setHasProfile(!!data.exists);
+        } catch (error) {
+          console.error("Error checking profile:", error);
+        }
+      };
+
+      checkProfile();
+    }
+  }, [isLoaded, isSignedIn, router]);
 
   const handleUpdateRestrictions = (newRestrictions: Restriction[]) => {
     setRestrictions((prev) => {
@@ -55,6 +85,10 @@ export default function OnboardingPage() {
     );
   };
 
+  if (!isLoaded || !isSignedIn) {
+    return null;
+  }
+
   return (
     <main className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100">
       <ProgressSteps steps={onboardingSteps} currentStep={2} />
@@ -62,7 +96,9 @@ export default function OnboardingPage() {
       <div className="flex-1 container mx-auto py-4">
         <div className="text-center mb-4">
           <h1 className="text-3xl font-bold text-slate-900">
-            Set Up Your Profile
+            {hasProfile
+              ? "Welcome back! Please finish setting up your profile"
+              : "Set Up Your Profile"}
           </h1>
           <p className="text-muted-foreground">
             Let&apos;s create your dietary profile through a simple conversation
@@ -71,7 +107,7 @@ export default function OnboardingPage() {
 
         <div
           className="bg-white rounded-lg shadow-lg overflow-hidden"
-          style={{ height: "80vh" }}
+          style={{ height: "500px" }}
         >
           <div className="grid grid-cols-2 h-full">
             <ChatInterface onUpdateRestrictions={handleUpdateRestrictions} />

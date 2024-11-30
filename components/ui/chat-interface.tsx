@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Button } from "./button";
 import { ScrollArea } from "./scroll-area";
 import { Input } from "./input";
@@ -94,14 +94,6 @@ export default function ChatInterface({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("Input changed:", e.target.value); // Debug log
     setInputValue(e.target.value);
@@ -147,7 +139,7 @@ export default function ChatInterface({
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full px-4 py-4">
+        <ScrollArea className="h-[400px] px-4 py-4">
           <div className="space-y-4">
             {messages.map((message) => (
               <div

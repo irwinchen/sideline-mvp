@@ -1,21 +1,27 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function GET() {
   try {
-    const user = await currentUser();
-    if (!user) {
-      return new NextResponse("Unauthorized", { status: 401 });
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const data = await req.json();
-    console.log(data);
-    // TODO: Save profile data to your database
-    // This will depend on your database setup (e.g., Supabase, PostgreSQL)
-
-    return NextResponse.json({ success: true });
+    // TODO: Replace this with actual database check
+    // For now, we'll simulate profile status:
+    // - exists: true if user has started their profile
+    // - completed: true if user has completed all onboarding steps
+    return NextResponse.json({
+      exists: false,
+      completed: false,
+    });
   } catch (error) {
-    console.error("Error saving profile:", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    console.error("Profile check error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

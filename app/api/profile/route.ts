@@ -25,3 +25,33 @@ export async function GET() {
     );
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const data = await request.json();
+
+    // TODO: Save profile data to database
+    // For now, we'll just return success
+    return NextResponse.json({
+      success: true,
+      message: "Profile saved successfully",
+      data: {
+        ...data,
+        userId,
+        updatedAt: new Date().toISOString(),
+      },
+    });
+  } catch (error) {
+    console.error("Profile save error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

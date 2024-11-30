@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation";
 import ProgressSteps from "components/ui/progress-steps";
 import ChatInterface from "components/ui/chat-interface";
 import RestrictionsChecklist from "components/ui/restrictions-checklist";
+import DietarySummaryCard from "components/ui/dietary-summary-card";
 import { Button } from "components/ui/button";
 
 const onboardingSteps = [
   { id: 1, label: "Create Account", completed: true },
   { id: 2, label: "Dietary Profile", current: true },
-  { id: 3, label: "Preferences" },
-  { id: 4, label: "Review" },
+  { id: 3, label: "Review" },
 ];
 
 type Restriction = {
@@ -85,6 +85,15 @@ export default function OnboardingPage() {
     );
   };
 
+  const handleContinueToReview = () => {
+    // Store restrictions in localStorage before navigation
+    localStorage.setItem(
+      "onboardingRestrictions",
+      JSON.stringify(restrictions)
+    );
+    router.push("/profile/review");
+  };
+
   if (!isLoaded || !isSignedIn) {
     return null;
   }
@@ -107,21 +116,28 @@ export default function OnboardingPage() {
 
         <div
           className="bg-white rounded-lg shadow-lg overflow-hidden"
-          style={{ height: "500px" }}
+          style={{ height: "600px" }}
         >
-          <div className="grid grid-cols-2 h-full">
+          <div className="grid grid-cols-[1fr,400px] h-full">
             <ChatInterface onUpdateRestrictions={handleUpdateRestrictions} />
-            <RestrictionsChecklist
-              restrictions={restrictions}
-              onRemoveRestriction={handleRemoveRestriction}
-              onToggleType={handleToggleType}
-            />
+            <div className="grid grid-rows-2 h-full">
+              <div className="h-[300px]">
+                <RestrictionsChecklist
+                  restrictions={restrictions}
+                  onRemoveRestriction={handleRemoveRestriction}
+                  onToggleType={handleToggleType}
+                />
+              </div>
+              <div className="h-[300px]">
+                <DietarySummaryCard restrictions={restrictions} />
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="flex justify-end mt-4 space-x-4">
           <Button variant="outline">Back</Button>
-          <Button>Continue to Preferences</Button>
+          <Button onClick={handleContinueToReview}>Continue to Review</Button>
         </div>
       </div>
     </main>

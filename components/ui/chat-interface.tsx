@@ -45,6 +45,15 @@ const processResponse = (
     "gluten",
   ];
 
+  // Check for "I don't eat X" patterns
+  const dontEatMatch = lowerMessage.match(
+    /(?:i (?:don't|do not|dont) eat) (.+?)(?:\.|\s|$)/i
+  );
+  if (dontEatMatch) {
+    const food = dontEatMatch[1].trim();
+    restrictions.push({ item: food, type: "willnot" });
+  }
+
   allergens.forEach((allergen) => {
     if (lowerMessage.includes(allergen)) {
       if (
@@ -78,7 +87,8 @@ const generateBotResponse = (userMessage: string): string => {
 
   if (
     lowerMessage.includes("prefer not") ||
-    lowerMessage.includes("don't like")
+    lowerMessage.includes("don't like") ||
+    lowerMessage.includes("don't eat")
   ) {
     return "I've noted your preferences. Is there anything else you'd like to add?";
   }

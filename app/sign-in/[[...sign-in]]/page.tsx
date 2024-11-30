@@ -1,10 +1,10 @@
-import { SignUp } from "@clerk/nextjs";
+import { SignIn } from "@clerk/nextjs";
 
-export default function SignUpPage() {
+export default function SignInPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100">
       <div className="w-full max-w-md p-8">
-        <SignUp
+        <SignIn
           appearance={{
             elements: {
               formButtonPrimary:
@@ -12,10 +12,10 @@ export default function SignUpPage() {
               footerActionLink: "text-indigo-600 hover:text-indigo-700",
             },
           }}
-          path="/sign-up"
+          path="/sign-in"
           routing="path"
-          signInUrl="/sign-in"
-          fallbackRedirectUrl="/onboarding"
+          signUpUrl="/sign-up"
+          fallbackRedirectUrl="/profile/review"
         />
       </div>
     </div>

@@ -12,8 +12,9 @@ export default async function ProfileLayout({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100">
-      {/* You can add common profile layout elements here, like a navigation bar */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        {children}
+      </div>
     </div>
   );
 }

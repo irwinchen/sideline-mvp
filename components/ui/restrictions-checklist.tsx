@@ -10,8 +10,9 @@ type Restriction = {
 
 type RestrictionsChecklistProps = {
   restrictions: Restriction[];
-  onRemoveRestriction: (item: string) => void;
-  onToggleType: (item: string) => void;
+  onRemoveRestriction?: (item: string) => void; // Made optional
+  onToggleType?: (item: string) => void; // Made optional
+  readonly?: boolean; // New prop to control edit state
 };
 
 type StateOption = null | "cannot" | "willnot";
@@ -20,6 +21,7 @@ export default function RestrictionsChecklist({
   restrictions,
   onRemoveRestriction,
   onToggleType,
+  readonly = false,
 }: RestrictionsChecklistProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
@@ -35,6 +37,7 @@ export default function RestrictionsChecklist({
   };
 
   const handleStateClick = (item: string) => {
+    if (readonly) return;
     if (activeDropdown === item) {
       setActiveDropdown(null);
     } else {
@@ -70,7 +73,10 @@ export default function RestrictionsChecklist({
                   <div className="flex items-center gap-3 flex-1 p-2 rounded-md text-sm bg-slate-50">
                     <button
                       onClick={() => handleStateClick(restriction.item)}
-                      className="w-5 h-5 rounded-full relative"
+                      className={`w-5 h-5 rounded-full relative ${
+                        readonly ? "cursor-default" : ""
+                      }`}
+                      disabled={readonly}
                     >
                       <div
                         className={`w-5 h-5 rounded-full ${getCircleColor(
@@ -82,61 +88,66 @@ export default function RestrictionsChecklist({
                       {restriction.item.charAt(0).toUpperCase() +
                         restriction.item.slice(1)}
                     </span>
-                    {activeDropdown === restriction.item && (
-                      <div className="absolute left-0 top-full mt-1 bg-white rounded-md shadow-lg border z-10">
-                        <div className="p-1">
-                          <button
-                            onClick={() => {
-                              onRemoveRestriction(restriction.item);
-                              setActiveDropdown(null);
-                            }}
-                            className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded w-full"
-                          >
-                            <div
-                              className={`w-4 h-4 rounded-full bg-gray-300`}
-                            />
-                            <span>None</span>
-                          </button>
-                          <button
-                            onClick={() => {
-                              if (restriction.type !== "cannot") {
-                                onToggleType(restriction.item);
-                              }
-                              setActiveDropdown(null);
-                            }}
-                            className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded w-full"
-                          >
-                            <div
-                              className={`w-4 h-4 rounded-full bg-red-500`}
-                            />
-                            <span>Cannot Eat</span>
-                          </button>
-                          <button
-                            onClick={() => {
-                              if (restriction.type !== "willnot") {
-                                onToggleType(restriction.item);
-                              }
-                              setActiveDropdown(null);
-                            }}
-                            className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded w-full"
-                          >
-                            <div
-                              className={`w-4 h-4 rounded-full bg-yellow-500`}
-                            />
-                            <span>Will Not Eat</span>
-                          </button>
+                    {!readonly &&
+                      activeDropdown === restriction.item &&
+                      onToggleType &&
+                      onRemoveRestriction && (
+                        <div className="absolute left-0 top-full mt-1 bg-white rounded-md shadow-lg border z-10">
+                          <div className="p-1">
+                            <button
+                              onClick={() => {
+                                onRemoveRestriction(restriction.item);
+                                setActiveDropdown(null);
+                              }}
+                              className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded w-full"
+                            >
+                              <div
+                                className={`w-4 h-4 rounded-full bg-gray-300`}
+                              />
+                              <span>None</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (restriction.type !== "cannot") {
+                                  onToggleType(restriction.item);
+                                }
+                                setActiveDropdown(null);
+                              }}
+                              className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded w-full"
+                            >
+                              <div
+                                className={`w-4 h-4 rounded-full bg-red-500`}
+                              />
+                              <span>Cannot Eat</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (restriction.type !== "willnot") {
+                                  onToggleType(restriction.item);
+                                }
+                                setActiveDropdown(null);
+                              }}
+                              className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded w-full"
+                            >
+                              <div
+                                className={`w-4 h-4 rounded-full bg-yellow-500`}
+                              />
+                              <span>Will Not Eat</span>
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => onRemoveRestriction(restriction.item)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+                  {!readonly && onRemoveRestriction && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => onRemoveRestriction(restriction.item)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
               ))}
             </div>

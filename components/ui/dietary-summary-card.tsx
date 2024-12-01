@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "./card";
 import { Button } from "./button";
 import { ScrollArea } from "./scroll-area";
@@ -18,7 +18,9 @@ export default function DietarySummaryCard({
   readonly = false,
 }: DietarySummaryCardProps) {
   const [editMode, setEditMode] = useState(false);
-  const [summaryText, setSummaryText] = useState<string>(() => {
+  const [summaryText, setSummaryText] = useState<string>("");
+
+  useEffect(() => {
     const cannotEat = restrictions
       .filter((r) => r.type === "cannot")
       .map((r) => r.item)
@@ -28,10 +30,12 @@ export default function DietarySummaryCard({
       .map((r) => r.item)
       .join(", ");
 
-    return `I have dietary restrictions that I would like respected. I cannot eat: ${
-      cannotEat || "N/A"
-    }. I prefer not to eat: ${willNotEat || "N/A"}.`;
-  });
+    setSummaryText(
+      `I have dietary restrictions that I would like respected. I cannot eat: ${
+        cannotEat || "N/A"
+      }. I prefer not to eat: ${willNotEat || "N/A"}.`
+    );
+  }, [restrictions]);
 
   const handleSave = () => {
     setEditMode(false);

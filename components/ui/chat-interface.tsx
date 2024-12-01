@@ -16,6 +16,9 @@ type ChatInterfaceProps = {
   ) => void;
 };
 
+type RestrictionType = "cannot" | "willnot";
+type Restriction = { item: string; type: RestrictionType };
+
 const initialMessages: Message[] = [
   {
     id: "1",
@@ -25,13 +28,11 @@ const initialMessages: Message[] = [
   },
 ];
 
-const processResponse = (
-  message: string
-): { item: string; type: "cannot" | "willnot" }[] => {
-  const restrictions: { item: string; type: "cannot" | "willnot" }[] = [];
+const processResponse = (message: string): Restriction[] => {
+  const restrictions: Restriction[] = [];
   const lowerMessage = message.toLowerCase();
 
-  // Common allergens to check for
+  // Common allergens and dietary items to check for
   const allergens = [
     "peanuts",
     "nuts",
@@ -43,33 +44,108 @@ const processResponse = (
     "soy",
     "wheat",
     "gluten",
+    "seafood",
+    "tree nuts",
   ];
 
-  // Check for "I don't eat X" patterns
-  const dontEatMatch = lowerMessage.match(
-    /(?:i (?:don't|do not|dont) eat) (.+?)(?:\.|\s|$)/i
-  );
-  if (dontEatMatch) {
-    const food = dontEatMatch[1].trim();
-    restrictions.push({ item: food, type: "willnot" });
-  }
+  // Dietary preferences and restrictions
+  const dietaryTypes: Array<{
+    term: string;
+    items: Restriction[];
+  }> = [
+    {
+      term: "kosher",
+      items: [
+        { item: "pork", type: "cannot" },
+        { item: "shellfish", type: "cannot" },
+        { item: "mixing meat and dairy", type: "cannot" },
+      ],
+    },
+    {
+      term: "halal",
+      items: [
+        { item: "pork", type: "cannot" },
+        { item: "alcohol", type: "cannot" },
+        { item: "non-halal meat", type: "cannot" },
+      ],
+    },
+    {
+      term: "vegetarian",
+      items: [
+        { item: "meat", type: "cannot" },
+        { item: "fish", type: "cannot" },
+      ],
+    },
+    {
+      term: "vegan",
+      items: [
+        { item: "meat", type: "cannot" },
+        { item: "fish", type: "cannot" },
+        { item: "dairy", type: "cannot" },
+        { item: "eggs", type: "cannot" },
+        { item: "honey", type: "cannot" },
+      ],
+    },
+  ];
 
+  // Check for dietary types (kosher, halal, vegetarian, vegan)
+  dietaryTypes.forEach(({ term, items }) => {
+    if (lowerMessage.includes(term)) {
+      items.forEach((item) => restrictions.push(item));
+    }
+  });
+
+  // Check for "I don't eat X" or "I can't eat X" or "I avoid X" patterns
+  const avoidancePatterns = [
+    /(?:i (?:don't|do not|dont) eat) (.+?)(?:\.|\s|$)/i,
+    /(?:i (?:can't|cannot) eat) (.+?)(?:\.|\s|$)/i,
+    /(?:i (?:avoid|stay away from)) (.+?)(?:\.|\s|$)/i,
+    /(?:no) (.+?)(?:\.|\s|$)/i,
+  ];
+
+  avoidancePatterns.forEach((pattern) => {
+    const match = lowerMessage.match(pattern);
+    if (match) {
+      const foods = match[1].split(/(?:,| and )/);
+      foods.forEach((food) => {
+        const cleanFood = food.trim().replace(/^(no|any) /, "");
+        if (cleanFood) {
+          const restrictionType: RestrictionType = pattern
+            .toString()
+            .includes("can't|cannot")
+            ? "cannot"
+            : "willnot";
+          restrictions.push({ item: cleanFood, type: restrictionType });
+        }
+      });
+    }
+  });
+
+  // Check for specific allergens
   allergens.forEach((allergen) => {
     if (lowerMessage.includes(allergen)) {
-      if (
+      const type: RestrictionType =
         lowerMessage.includes("allerg") ||
         lowerMessage.includes("cannot") ||
         lowerMessage.includes("can't")
-      ) {
-        restrictions.push({ item: allergen, type: "cannot" });
-      } else if (
-        lowerMessage.includes("prefer not") ||
-        lowerMessage.includes("don't like")
-      ) {
-        restrictions.push({ item: allergen, type: "willnot" });
+          ? "cannot"
+          : "willnot";
+
+      // Avoid duplicate entries
+      if (!restrictions.some((r) => r.item === allergen)) {
+        restrictions.push({ item: allergen, type });
       }
     }
   });
+
+  // Handle specific phrases
+  if (lowerMessage.includes("lactose intolerant")) {
+    restrictions.push({ item: "dairy", type: "cannot" });
+  }
+
+  if (lowerMessage.includes("celiac") || lowerMessage.includes("coeliac")) {
+    restrictions.push({ item: "gluten", type: "cannot" });
+  }
 
   return restrictions;
 };
@@ -105,17 +181,12 @@ export default function ChatInterface({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Input changed:", e.target.value); // Debug log
     setInputValue(e.target.value);
   };
 
   const handleSendMessage = () => {
-    console.log("Sending message:", inputValue); // Debug log
     const messageToSend = inputValue.trim();
-    if (!messageToSend) {
-      console.log("Message is empty, not sending"); // Debug log
-      return;
-    }
+    if (!messageToSend) return;
 
     // Add user message
     const userMessage: Message = {
@@ -126,7 +197,6 @@ export default function ChatInterface({
 
     // Process user response for restrictions
     const newRestrictions = processResponse(messageToSend);
-    console.log("New restrictions:", newRestrictions); // Debug log
     if (newRestrictions.length > 0) {
       onUpdateRestrictions(newRestrictions);
     }
@@ -138,7 +208,6 @@ export default function ChatInterface({
       content: generateBotResponse(messageToSend),
     };
 
-    console.log("Updating messages with:", userMessage, botResponse); // Debug log
     setMessages((prev) => [...prev, userMessage, botResponse]);
     setInputValue("");
 
@@ -192,10 +261,7 @@ export default function ChatInterface({
           />
           <Button
             type="button"
-            onClick={() => {
-              console.log("Send button clicked, current input:", inputValue); // Debug log
-              handleSendMessage();
-            }}
+            onClick={handleSendMessage}
             className="shrink-0 h-10 w-10 bg-blue-600 hover:bg-blue-700"
           >
             <Send className="h-4 w-4" />

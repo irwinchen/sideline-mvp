@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "./button";
-import { Menu, X, LogIn, User } from "lucide-react";
+import { Menu, X, LogIn } from "lucide-react";
 import { UserButton, useUser } from "@clerk/nextjs";
 
 const Navigation = () => {
@@ -18,6 +18,7 @@ const Navigation = () => {
     { href: "/about", label: "About" },
     { href: "/how-it-works", label: "How It Works" },
     { href: "/providers", label: "Providers" },
+    { href: "/profile", label: "Profile" },
   ];
 
   return (
@@ -45,15 +46,7 @@ const Navigation = () => {
               </Link>
             ))}
             {isSignedIn ? (
-              <div className="flex items-center space-x-4">
-                <Link
-                  href="/profile"
-                  className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  <User className="h-5 w-5" />
-                </Link>
-                <UserButton afterSignOutUrl="/" />
-              </div>
+              <UserButton afterSignOutUrl="/" />
             ) : (
               <Link href="/sign-in">
                 <Button variant="ghost" size="sm" className="ml-4">
@@ -97,14 +90,7 @@ const Navigation = () => {
             ))}
             <div className="px-3 py-2">
               {isSignedIn ? (
-                <div className="flex items-center space-x-4 px-3">
-                  <Link
-                    href="/profile"
-                    className="text-gray-600 hover:text-gray-900"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <User className="h-5 w-5" />
-                  </Link>
+                <div className="px-3">
                   <UserButton afterSignOutUrl="/" />
                 </div>
               ) : (

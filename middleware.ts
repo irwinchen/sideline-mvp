@@ -1,7 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isPublicRoute = createRouteMatcher([
-  "/(.*)", // Root catch-all route
   "/about(.*)",
   "/how-it-works(.*)",
   "/contact(.*)",
@@ -9,6 +8,8 @@ const isPublicRoute = createRouteMatcher([
   "/sign-in/(.*)",
   "/sign-up/(.*)",
   "/test(.*)",
+  "/profile(.*)", // Allow all profile routes to be public
+  "/(.*)", // Root catch-all route should be last
 ]);
 
 export default clerkMiddleware(async (auth, request) => {

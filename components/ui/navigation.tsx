@@ -36,10 +36,10 @@ const Navigation = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
+                className={`text-sm font-medium transition-colors hover:text-primary relative py-2 ${
                   isActive(link.href)
-                    ? "text-primary"
-                    : "text-gray-600 hover:text-gray-900"
+                    ? "text-primary font-semibold bg-primary/5 px-3 rounded-md before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary"
+                    : "text-gray-600 hover:text-gray-900 px-3"
                 }`}
               >
                 {link.label}
@@ -78,9 +78,9 @@ const Navigation = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`block px-3 py-2 rounded-md text-base font-medium ${
+                className={`block px-4 py-2.5 rounded-md text-base font-medium transition-all ${
                   isActive(link.href)
-                    ? "text-primary bg-primary/10"
+                    ? "text-primary font-semibold bg-primary/10 border-l-4 border-primary"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                 }`}
                 onClick={() => setIsOpen(false)}

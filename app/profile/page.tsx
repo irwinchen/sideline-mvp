@@ -2,11 +2,10 @@
 
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
+import { Button } from "components/ui/button";
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import DietarySummaryCard from "@/components/ui/dietary-summary-card";
+import DietarySummaryCard from "components/ui/dietary-summary-card";
 
 type Restriction = {
   item: string;
@@ -121,25 +120,8 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">My Profile</h1>
-        <Link href="/profile/edit">
-          <Button variant="outline" size="sm">
-            <Edit className="h-4 w-4 mr-2" />
-            Edit Profile
-          </Button>
-        </Link>
-      </div>
       <div className="bg-white p-6 rounded-lg shadow-sm">
         <div className="space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-800">
-              {user.fullName || user.firstName || "Name not set"}
-            </h2>
-            <p className="text-gray-600">
-              {user.primaryEmailAddress?.emailAddress}
-            </p>
-          </div>
           {profileData && (
             <DietarySummaryCard
               restrictions={profileData.restrictions}

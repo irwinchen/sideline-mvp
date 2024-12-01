@@ -1,5 +1,7 @@
 import { Metadata } from "next";
-import { Card } from "@/components/ui/card";
+import { Card } from "components/ui/card";
+import { Button } from "components/ui/button";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Providers | Sideline",
@@ -25,8 +27,6 @@ export default function ProvidersPage() {
             <li>• Anticipate special dietary needs before guests arrive</li>
             <li>• Customize menus to delight every customer</li>
             <li>• Reduce wait times with better preparation</li>
-            <li>• Optimize inventory based on customer preferences</li>
-            <li>• Turn dietary restrictions into opportunities</li>
           </ul>
         </Card>
 
@@ -36,8 +36,6 @@ export default function ProvidersPage() {
             <li>• Create memorable dining experiences</li>
             <li>• Personalize room service recommendations</li>
             <li>• Anticipate guest needs before check-in</li>
-            <li>• Streamline kitchen operations</li>
-            <li>• Enhance guest satisfaction scores</li>
           </ul>
         </Card>
 
@@ -47,8 +45,6 @@ export default function ProvidersPage() {
             <li>• Perfect wedding menu planning</li>
             <li>• Seamless dietary accommodation</li>
             <li>• Smart catering preparation</li>
-            <li>• Special request management</li>
-            <li>• Efficient event staff coordination</li>
           </ul>
         </Card>
 
@@ -60,8 +56,6 @@ export default function ProvidersPage() {
             <li>• Proactive demand forecasting</li>
             <li>• Streamlined inventory management</li>
             <li>• Automated dietary tracking</li>
-            <li>• Cost-effective planning</li>
-            <li>• Enhanced customer satisfaction</li>
           </ul>
         </Card>
       </div>
@@ -70,11 +64,16 @@ export default function ProvidersPage() {
         <p className="text-xl font-semibold mb-4">
           Ready to elevate your customer experience?
         </p>
-        <p className="text-gray-600">
+        <p className="text-gray-600 mb-8">
           Join Sideline today and transform how you anticipate, plan, and
           deliver exceptional dining experiences while optimizing your
           operations.
         </p>
+        <Link href="/providers/register">
+          <Button size="lg" className="px-8">
+            Register as Provider
+          </Button>
+        </Link>
       </div>
     </main>
   );

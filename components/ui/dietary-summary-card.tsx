@@ -88,14 +88,14 @@ export default function DietarySummaryCard({
       return summary;
     }
 
-    const summaryTemplate = restrictionTranslations["Summary"][language];
     if (!willNotEatItems) {
-      // Remove the willNotEat part from the template
-      return summaryTemplate
-        .replace(`. {willNotEat}`, "")
-        .replace("{cannotEat}", cannotEatItems);
+      return restrictionTranslations["SummaryCannotOnly"][language].replace(
+        "{cannotEat}",
+        cannotEatItems
+      );
     }
-    return summaryTemplate
+
+    return restrictionTranslations["SummaryBoth"][language]
       .replace("{cannotEat}", cannotEatItems)
       .replace("{willNotEat}", willNotEatItems);
   };

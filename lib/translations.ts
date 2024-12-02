@@ -118,7 +118,12 @@ export const restrictionTranslations: TranslationType = {
     zh: "您的饮食限制将在聊天时显示在这里。",
     ja: "チャットしながら、あなたの食事制限がここに表示されます。",
   },
-  Summary: {
+  SummaryCannotOnly: {
+    es: "Tengo restricciones dietéticas que me gustaría que se respeten. No puedo comer: {cannotEat}.",
+    zh: "我有需要注意的饮食限制。我不能吃：{cannotEat}。",
+    ja: "私には守っていただきたい食事制限があります。食べられないもの：{cannotEat}。",
+  },
+  SummaryBoth: {
     es: "Tengo restricciones dietéticas que me gustaría que se respeten. No puedo comer: {cannotEat}. Prefiero no comer: {willNotEat}.",
     zh: "我有需要注意的饮食限制。我不能吃：{cannotEat}。我不想吃：{willNotEat}。",
     ja: "私には守っていただきたい食事制限があります。食べられないもの：{cannotEat}。食べたくないもの：{willNotEat}。",

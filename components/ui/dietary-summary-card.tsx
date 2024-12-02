@@ -10,7 +10,7 @@ import {
   FaDrumstickBite,
 } from "react-icons/fa";
 import { IoWarning } from "react-icons/io5";
-import { MdTranslate, MdCancel, MdClose } from "react-icons/md";
+import { MdCancel, MdClose } from "react-icons/md";
 
 type Restriction = {
   item: string;
@@ -20,6 +20,7 @@ type Restriction = {
 type DietarySummaryCardProps = {
   restrictions: Restriction[];
   readonly?: boolean;
+  language?: "en" | "es" | "zh" | "ja";
 };
 
 const translations = {
@@ -43,15 +44,25 @@ const translations = {
     Summary:
       "Tengo restricciones dietéticas que me gustaría que se respeten. No puedo comer: {cannotEat}. Prefiero no comer: {willNotEat}.",
   },
-  fr: {
-    "Cannot Eat": "Ne Peux Pas Manger",
-    "Prefer Not to Eat": "Préfère Ne Pas Manger",
-    peanuts: "cacahuètes",
-    shellfish: "fruits de mer",
-    dairy: "produits laitiers",
-    "red meat": "viande rouge",
+  zh: {
+    "Cannot Eat": "不能吃",
+    "Prefer Not to Eat": "不想吃",
+    peanuts: "花生",
+    shellfish: "贝类",
+    dairy: "乳制品",
+    "red meat": "红肉",
     Summary:
-      "J'ai des restrictions alimentaires que j'aimerais voir respectées. Je ne peux pas manger: {cannotEat}. Je préfère ne pas manger: {willNotEat}.",
+      "我有需要注意的饮食限制。我不能吃：{cannotEat}。我不想吃：{willNotEat}。",
+  },
+  ja: {
+    "Cannot Eat": "食べられないもの",
+    "Prefer Not to Eat": "食べたくないもの",
+    peanuts: "ピーナッツ",
+    shellfish: "貝類",
+    dairy: "乳製品",
+    "red meat": "赤身肉",
+    Summary:
+      "私には守っていただきたい食事制限があります。食べられないもの：{cannotEat}。食べたくないもの：{willNotEat}。",
   },
 };
 
@@ -83,22 +94,16 @@ const getIconForRestriction = (item: string, type: "cannot" | "willnot") => {
   );
 };
 
-const languages = [
-  { code: "en", name: "English" },
-  { code: "es", name: "Español" },
-  { code: "fr", name: "Français" },
-];
-
 export default function DietarySummaryCard({
   restrictions,
   readonly = false,
+  language = "en",
 }: DietarySummaryCardProps) {
   const [editMode, setEditMode] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
 
   const translate = (key: string) => {
     return (
-      translations[selectedLanguage as keyof typeof translations]?.[
+      translations[language as keyof typeof translations]?.[
         key as keyof (typeof translations)["en"]
       ] || key
     );
@@ -134,32 +139,16 @@ export default function DietarySummaryCard({
     <div className="h-full border-l border-t">
       <div className="p-4 border-b">
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold">Summary for Providers</h2>
-          <div className="flex gap-2">
-            <div className="flex items-center gap-2">
-              <MdTranslate className="text-gray-600" />
-              <select
-                className="border rounded-md px-2 py-1 text-sm"
-                value={selectedLanguage}
-                onChange={(e) => setSelectedLanguage(e.target.value)}
-              >
-                {languages.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {!readonly && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setEditMode(!editMode)}
-              >
-                {editMode ? "Cancel" : "Edit"}
-              </Button>
-            )}
-          </div>
+          <h2 className="text-lg font-semibold">Food Restrictions</h2>
+          {!readonly && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setEditMode(!editMode)}
+            >
+              {editMode ? "Cancel" : "Edit"}
+            </Button>
+          )}
         </div>
       </div>
 

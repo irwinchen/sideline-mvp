@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import crypto from "crypto";
 
 export async function GET() {
   try {
@@ -36,14 +37,22 @@ export async function POST(request: Request) {
 
     const data = await request.json();
 
+    // Generate a unique public ID for the profile
+    const publicId = crypto.randomUUID();
+
     // TODO: Save profile data to database
-    // For now, we'll just return success
+    // In production, you would:
+    // 1. Save the private profile data with userId
+    // 2. Create a public version with publicId
+    // 3. Store the relationship between them
+
     return NextResponse.json({
       success: true,
       message: "Profile saved successfully",
       data: {
         ...data,
         userId,
+        publicId,
         updatedAt: new Date().toISOString(),
       },
     });

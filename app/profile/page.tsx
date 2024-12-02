@@ -56,12 +56,9 @@ export default function ProfilePage() {
   }
 
   const renderQRCode = (data: ProfileData | null, isSample = false) => {
-    const qrValue = JSON.stringify({
-      name: isSample ? "Sample User" : user?.fullName,
-      restrictions: isSample ? SAMPLE_PROFILE.restrictions : data?.restrictions,
-      sample: isSample,
-      timestamp: new Date().toISOString(),
-    });
+    const qrValue = isSample
+      ? "https://main.d3d6ak7p1vbc06.amplifyapp.com/p/sample"
+      : `https://main.d3d6ak7p1vbc06.amplifyapp.com/p/${user?.id}`;
 
     return (
       <div className="flex flex-col items-center mt-6 p-4 bg-white rounded-lg border border-gray-200">
@@ -121,6 +118,14 @@ export default function ProfilePage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-gray-800">My Profile</h2>
+          <Link href={`/p/${user.id}`}>
+            <Button variant="outline" size="sm">
+              View Public Profile
+            </Button>
+          </Link>
+        </div>
         <div className="space-y-4">
           {profileData && (
             <DietarySummaryCard

@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import DietarySummaryCard from "@/components/ui/dietary-summary-card";
-import RestrictionsChecklist from "@/components/ui/restrictions-checklist";
+import { Button } from "components/ui/button";
+import { Card } from "components/ui/card";
+import DietarySummaryCard from "components/ui/dietary-summary-card";
+import RestrictionsChecklist from "components/ui/restrictions-checklist";
+import ChatInterface from "components/ui/chat-interface";
 
 export default function EditProfilePage() {
   const router = useRouter();
@@ -16,6 +17,26 @@ export default function EditProfilePage() {
     { item: "peanuts", type: "cannot" as const },
     { item: "shellfish", type: "willnot" as const },
   ]);
+
+  const handleUpdateRestrictions = (
+    newRestrictions: { item: string; type: "cannot" | "willnot" }[]
+  ) => {
+    setRestrictions((prev) => {
+      const updatedRestrictions = [...prev];
+
+      newRestrictions.forEach((newItem) => {
+        const existingIndex = updatedRestrictions.findIndex(
+          (item) => item.item === newItem.item
+        );
+
+        if (existingIndex === -1) {
+          updatedRestrictions.push(newItem);
+        }
+      });
+
+      return updatedRestrictions;
+    });
+  };
 
   const handleRemoveRestriction = (item: string) => {
     setRestrictions(restrictions.filter((r) => r.item !== item));
@@ -39,6 +60,12 @@ export default function EditProfilePage() {
     try {
       setIsLoading(true);
       setError(null);
+
+      // Store restrictions in localStorage before navigating
+      localStorage.setItem(
+        "onboardingRestrictions",
+        JSON.stringify(restrictions)
+      );
 
       const response = await fetch("/api/profile", {
         method: "POST",
@@ -77,7 +104,7 @@ export default function EditProfilePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto space-y-8 p-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Edit Your Profile</h1>
         <div className="space-x-4">
@@ -96,18 +123,25 @@ export default function EditProfilePage() {
         </div>
       )}
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <RestrictionsChecklist
-            restrictions={restrictions}
-            onRemoveRestriction={handleRemoveRestriction}
-            onToggleType={handleToggleType}
-          />
-        </Card>
-
-        <Card className="p-6">
-          <DietarySummaryCard restrictions={restrictions} />
-        </Card>
+      <div
+        className="bg-white rounded-lg shadow-lg overflow-hidden"
+        style={{ height: "600px" }}
+      >
+        <div className="grid grid-cols-[1fr,400px] h-full">
+          <ChatInterface onUpdateRestrictions={handleUpdateRestrictions} />
+          <div className="grid grid-rows-2 h-full">
+            <div className="h-[300px]">
+              <RestrictionsChecklist
+                restrictions={restrictions}
+                onRemoveRestriction={handleRemoveRestriction}
+                onToggleType={handleToggleType}
+              />
+            </div>
+            <div className="h-[300px]">
+              <DietarySummaryCard restrictions={restrictions} />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

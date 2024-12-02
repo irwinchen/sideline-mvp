@@ -12,6 +12,15 @@ type Restriction = {
   type: "cannot" | "willnot";
 };
 
+type Language = "en" | "es" | "zh" | "ja";
+
+const LANGUAGES = [
+  { code: "en", name: "English" },
+  { code: "es", name: "Español" },
+  { code: "zh", name: "中文" },
+  { code: "ja", name: "日本語" },
+] as const;
+
 const AMPLIFY_BASE_URL = "https://main.d3d6ak7p1vbc06.amplifyapp.com";
 
 export default function ReviewPage() {
@@ -21,6 +30,7 @@ export default function ReviewPage() {
   const [error, setError] = useState<string | null>(null);
   const [restrictions, setRestrictions] = useState<Restriction[]>([]);
   const [publicProfileUrl, setPublicProfileUrl] = useState<string | null>(null);
+  const [language, setLanguage] = useState<Language>("en");
 
   useEffect(() => {
     // Load restrictions from localStorage on mount
@@ -88,20 +98,33 @@ export default function ReviewPage() {
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Review Your Profile</h1>
-          {!isApproved && (
-            <div className="space-x-4">
-              <Button
-                variant="outline"
-                onClick={handleBack}
-                disabled={isLoading}
-              >
-                Back
-              </Button>
-              <Button onClick={handleApprove} disabled={isLoading}>
-                {isLoading ? "Saving..." : "Approve"}
-              </Button>
-            </div>
-          )}
+          <div className="flex items-center gap-4">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value as Language)}
+              className="block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            >
+              {LANGUAGES.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
+            {!isApproved && (
+              <div className="space-x-4">
+                <Button
+                  variant="outline"
+                  onClick={handleBack}
+                  disabled={isLoading}
+                >
+                  Back
+                </Button>
+                <Button onClick={handleApprove} disabled={isLoading}>
+                  {isLoading ? "Saving..." : "Approve"}
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
 
         {error && (
@@ -114,6 +137,7 @@ export default function ReviewPage() {
           <DietarySummaryCard
             restrictions={restrictions}
             readonly={isApproved}
+            language={language}
           />
         </Card>
 

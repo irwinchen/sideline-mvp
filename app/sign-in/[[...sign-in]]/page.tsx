@@ -1,6 +1,6 @@
 import { SignIn } from "@clerk/nextjs";
 
-export default function SignInPage() {
+export default function Page() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100">
       <div className="w-full max-w-md p-8">
@@ -12,10 +12,6 @@ export default function SignInPage() {
               footerActionLink: "text-indigo-600 hover:text-indigo-700",
             },
           }}
-          path="/sign-in"
-          routing="path"
-          signUpUrl="/sign-up"
-          fallbackRedirectUrl="/profile"
         />
       </div>
     </div>

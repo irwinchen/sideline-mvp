@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "./button";
 import { ScrollArea } from "./scroll-area";
 import { Input } from "./input";
 import { Send } from "lucide-react";
+import { restrictionTranslations } from "@/lib/translations";
 
 type Message = {
   id: string;
@@ -26,6 +27,17 @@ const initialMessages: Message[] = [
     content:
       "Hi! I'll help you set up your dietary restrictions. Do you have any food allergies?",
   },
+  {
+    id: "2",
+    type: "user",
+    content: "I cannot eat black pepper and peppers",
+  },
+  {
+    id: "3",
+    type: "bot",
+    content:
+      "I've noted those restrictions. Is there anything else I should know about your dietary preferences?",
+  },
 ];
 
 const processResponse = (message: string): Restriction[] => {
@@ -46,7 +58,32 @@ const processResponse = (message: string): Restriction[] => {
     "gluten",
     "seafood",
     "tree nuts",
+    "black pepper",
+    "peppers",
   ];
+
+  // Check for translations
+  Object.entries(restrictionTranslations).forEach(([item, translations]) => {
+    const translatedTerms = [
+      item.toLowerCase(),
+      translations.es.toLowerCase(),
+      translations.zh.toLowerCase(),
+      translations.ja.toLowerCase(),
+    ];
+
+    if (translatedTerms.some((term) => lowerMessage.includes(term))) {
+      const type: RestrictionType =
+        lowerMessage.includes("allerg") ||
+        lowerMessage.includes("cannot") ||
+        lowerMessage.includes("can't")
+          ? "cannot"
+          : "willnot";
+
+      if (!restrictions.some((r) => r.item === item)) {
+        restrictions.push({ item, type });
+      }
+    }
+  });
 
   // Dietary preferences and restrictions
   const dietaryTypes: Array<{
@@ -179,6 +216,17 @@ export default function ChatInterface({
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Process initial message for default restrictions
+  useEffect(() => {
+    const defaultMessage = initialMessages[1];
+    if (defaultMessage && defaultMessage.type === "user") {
+      const defaultRestrictions = processResponse(defaultMessage.content);
+      if (defaultRestrictions.length > 0) {
+        onUpdateRestrictions(defaultRestrictions);
+      }
+    }
+  }, [onUpdateRestrictions]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);

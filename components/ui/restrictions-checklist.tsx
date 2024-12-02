@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { Button } from "./button";
 import { ScrollArea } from "./scroll-area";
 import { useState } from "react";
+import { restrictionTranslations } from "@/lib/translations";
 
 type Restriction = {
   item: string;
@@ -10,9 +11,10 @@ type Restriction = {
 
 type RestrictionsChecklistProps = {
   restrictions: Restriction[];
-  onRemoveRestriction?: (item: string) => void; // Made optional
-  onToggleType?: (item: string) => void; // Made optional
-  readonly?: boolean; // New prop to control edit state
+  onRemoveRestriction?: (item: string) => void;
+  onToggleType?: (item: string) => void;
+  readonly?: boolean;
+  language?: "en" | "es" | "zh" | "ja";
 };
 
 type StateOption = null | "cannot" | "willnot";
@@ -22,8 +24,14 @@ export default function RestrictionsChecklist({
   onRemoveRestriction,
   onToggleType,
   readonly = false,
+  language = "en",
 }: RestrictionsChecklistProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const translate = (key: string) => {
+    if (language === "en") return key;
+    return restrictionTranslations[key.toLowerCase()]?.[language] || key;
+  };
 
   const getCircleColor = (type: StateOption) => {
     switch (type) {
@@ -46,7 +54,10 @@ export default function RestrictionsChecklist({
   };
 
   const groupedRestrictions = restrictions.reduce((acc, restriction) => {
-    const type = restriction.type === "cannot" ? "Cannot Eat" : "Will Not Eat";
+    const type =
+      restriction.type === "cannot"
+        ? translate("Cannot Eat")
+        : translate("Will Not Eat");
     if (!acc[type]) {
       acc[type] = [];
     }
@@ -84,10 +95,7 @@ export default function RestrictionsChecklist({
                         )}`}
                       />
                     </button>
-                    <span>
-                      {restriction.item.charAt(0).toUpperCase() +
-                        restriction.item.slice(1)}
-                    </span>
+                    <span>{translate(restriction.item)}</span>
                     {!readonly &&
                       activeDropdown === restriction.item &&
                       onToggleType &&
@@ -118,7 +126,7 @@ export default function RestrictionsChecklist({
                               <div
                                 className={`w-4 h-4 rounded-full bg-red-500`}
                               />
-                              <span>Cannot Eat</span>
+                              <span>{translate("Cannot Eat")}</span>
                             </button>
                             <button
                               onClick={() => {
@@ -132,7 +140,7 @@ export default function RestrictionsChecklist({
                               <div
                                 className={`w-4 h-4 rounded-full bg-yellow-500`}
                               />
-                              <span>Will Not Eat</span>
+                              <span>{translate("Will Not Eat")}</span>
                             </button>
                           </div>
                         </div>
@@ -156,9 +164,9 @@ export default function RestrictionsChecklist({
 
         {Object.keys(groupedRestrictions).length === 0 && (
           <div className="text-center text-slate-500 mt-8">
-            <p>No dietary restrictions added yet.</p>
+            <p>{translate("No dietary restrictions added yet.")}</p>
             <p className="text-sm mt-2">
-              Your restrictions will appear here as you chat.
+              {translate("Your restrictions will appear here as you chat.")}
             </p>
           </div>
         )}

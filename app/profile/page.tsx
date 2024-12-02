@@ -12,6 +12,8 @@ type Restriction = {
   type: "cannot" | "willnot";
 };
 
+type Language = "en" | "es" | "zh" | "ja";
+
 interface ProfileData {
   restrictions: Restriction[];
 }
@@ -26,10 +28,18 @@ const SAMPLE_PROFILE: ProfileData = {
   ],
 };
 
+const LANGUAGES = [
+  { code: "en", name: "English" },
+  { code: "es", name: "Español" },
+  { code: "zh", name: "中文" },
+  { code: "ja", name: "日本語" },
+] as const;
+
 export default function ProfilePage() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [isClient, setIsClient] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [language, setLanguage] = useState<Language>("en");
 
   useEffect(() => {
     setIsClient(true);
@@ -75,6 +85,22 @@ export default function ProfilePage() {
     );
   };
 
+  const renderLanguageSelector = () => (
+    <div className="mb-4 flex justify-end">
+      <select
+        value={language}
+        onChange={(e) => setLanguage(e.target.value as Language)}
+        className="block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+      >
+        {LANGUAGES.map((lang) => (
+          <option key={lang.code} value={lang.code}>
+            {lang.name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+
   if (!isSignedIn) {
     return (
       <div className="max-w-2xl mx-auto">
@@ -90,6 +116,7 @@ export default function ProfilePage() {
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm">
+          {renderLanguageSelector()}
           <div className="space-y-4">
             <div>
               <h2 className="text-lg font-semibold text-gray-800">
@@ -100,6 +127,7 @@ export default function ProfilePage() {
             <DietarySummaryCard
               restrictions={SAMPLE_PROFILE.restrictions}
               readonly={true}
+              language={language}
             />
             {renderQRCode(SAMPLE_PROFILE, true)}
             <div className="mt-6">
@@ -126,11 +154,13 @@ export default function ProfilePage() {
             </Button>
           </Link>
         </div>
+        {renderLanguageSelector()}
         <div className="space-y-4">
           {profileData && (
             <DietarySummaryCard
               restrictions={profileData.restrictions}
               readonly={false}
+              language={language}
             />
           )}
           {profileData && renderQRCode(profileData)}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card } from "./card";
 import { Button } from "./button";
 import { ScrollArea } from "./scroll-area";
@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import { IoWarning } from "react-icons/io5";
 import { MdCancel, MdClose } from "react-icons/md";
+import { restrictionTranslations } from "@/lib/translations";
 
 type Restriction = {
   item: string;
@@ -21,49 +22,6 @@ type DietarySummaryCardProps = {
   restrictions: Restriction[];
   readonly?: boolean;
   language?: "en" | "es" | "zh" | "ja";
-};
-
-const translations = {
-  en: {
-    "Cannot Eat": "Cannot Eat",
-    "Prefer Not to Eat": "Prefer Not to Eat",
-    peanuts: "peanuts",
-    shellfish: "shellfish",
-    dairy: "dairy",
-    "red meat": "red meat",
-    Summary:
-      "I have dietary restrictions that I would like respected. I cannot eat: {cannotEat}. I prefer not to eat: {willNotEat}.",
-  },
-  es: {
-    "Cannot Eat": "No Puedo Comer",
-    "Prefer Not to Eat": "Prefiero No Comer",
-    peanuts: "cacahuetes",
-    shellfish: "mariscos",
-    dairy: "lácteos",
-    "red meat": "carne roja",
-    Summary:
-      "Tengo restricciones dietéticas que me gustaría que se respeten. No puedo comer: {cannotEat}. Prefiero no comer: {willNotEat}.",
-  },
-  zh: {
-    "Cannot Eat": "不能吃",
-    "Prefer Not to Eat": "不想吃",
-    peanuts: "花生",
-    shellfish: "贝类",
-    dairy: "乳制品",
-    "red meat": "红肉",
-    Summary:
-      "我有需要注意的饮食限制。我不能吃：{cannotEat}。我不想吃：{willNotEat}。",
-  },
-  ja: {
-    "Cannot Eat": "食べられないもの",
-    "Prefer Not to Eat": "食べたくないもの",
-    peanuts: "ピーナッツ",
-    shellfish: "貝類",
-    dairy: "乳製品",
-    "red meat": "赤身肉",
-    Summary:
-      "私には守っていただきたい食事制限があります。食べられないもの：{cannotEat}。食べたくないもの：{willNotEat}。",
-  },
 };
 
 const getIconForRestriction = (item: string, type: "cannot" | "willnot") => {
@@ -102,15 +60,12 @@ export default function DietarySummaryCard({
   const [editMode, setEditMode] = useState(false);
 
   const translate = (key: string) => {
-    return (
-      translations[language as keyof typeof translations]?.[
-        key as keyof (typeof translations)["en"]
-      ] || key
-    );
+    if (language === "en") return key;
+    return restrictionTranslations[key.toLowerCase()]?.[language] || key;
   };
 
   const translateItem = (item: string) => {
-    return translate(item.toLowerCase()) || item;
+    return translate(item.toLowerCase());
   };
 
   const getSummaryText = () => {
@@ -185,9 +140,7 @@ export default function DietarySummaryCard({
               </div>
 
               <div className="space-y-4">
-                <h3 className="font-medium">
-                  {translate("Prefer Not to Eat")}
-                </h3>
+                <h3 className="font-medium">{translate("Will Not Eat")}</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {restrictions
                     .filter((r) => r.type === "willnot")

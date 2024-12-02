@@ -14,6 +14,8 @@ export async function GET(
           ? [
               { item: "peanuts", type: "cannot" as const },
               { item: "shellfish", type: "cannot" as const },
+              { item: "black pepper", type: "cannot" as const },
+              { item: "peppers", type: "cannot" as const },
               { item: "dairy", type: "willnot" as const },
               { item: "red meat", type: "willnot" as const },
             ]

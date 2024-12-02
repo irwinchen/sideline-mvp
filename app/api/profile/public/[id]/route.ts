@@ -20,8 +20,8 @@ export async function GET(
               { item: "red meat", type: "willnot" as const },
             ]
           : [
-              { item: "gluten", type: "cannot" as const },
-              { item: "soy", type: "willnot" as const },
+              { item: "peppers", type: "cannot" as const },
+              { item: "black pepper", type: "cannot" as const },
             ],
       updatedAt: new Date().toISOString(),
     };

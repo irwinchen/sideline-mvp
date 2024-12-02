@@ -85,6 +85,17 @@ export const restrictionTranslations: TranslationType = {
     zh: "海鲜",
     ja: "魚介類",
   },
+  // Adding translations for peppers and black pepper
+  peppers: {
+    es: "pimientos",
+    zh: "辣椒",
+    ja: "ピーマン",
+  },
+  "black pepper": {
+    es: "pimienta negra",
+    zh: "黑胡椒",
+    ja: "黒コショウ",
+  },
 
   // UI text
   "Cannot Eat": {

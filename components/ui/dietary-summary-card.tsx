@@ -69,21 +69,35 @@ export default function DietarySummaryCard({
   };
 
   const getSummaryText = () => {
-    const cannotEat = restrictions
+    const cannotEatItems = restrictions
       .filter((r) => r.type === "cannot")
       .map((r) => translateItem(r.item))
       .join(", ");
 
-    const willNotEat = restrictions
+    const willNotEatItems = restrictions
       .filter((r) => r.type === "willnot")
       .map((r) => translateItem(r.item))
       .join(", ");
 
-    const summary = translate("Summary")
-      .replace("{cannotEat}", cannotEat || "N/A")
-      .replace("{willNotEat}", willNotEat || "N/A");
+    if (language === "en") {
+      let summary = `I have dietary restrictions that I would like respected. I cannot eat: ${cannotEatItems}`;
+      if (willNotEatItems) {
+        summary += `. I prefer not to eat: ${willNotEatItems}`;
+      }
+      summary += ".";
+      return summary;
+    }
 
-    return summary;
+    const summaryTemplate = restrictionTranslations["Summary"][language];
+    if (!willNotEatItems) {
+      // Remove the willNotEat part from the template
+      return summaryTemplate
+        .replace(`. {willNotEat}`, "")
+        .replace("{cannotEat}", cannotEatItems);
+    }
+    return summaryTemplate
+      .replace("{cannotEat}", cannotEatItems)
+      .replace("{willNotEat}", willNotEatItems);
   };
 
   const handleSave = () => {

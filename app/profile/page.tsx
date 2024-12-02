@@ -21,8 +21,8 @@ interface ProfileData {
 // Sample profile data for non-logged in users
 const SAMPLE_PROFILE: ProfileData = {
   restrictions: [
-    { item: "peanuts", type: "cannot" },
-    { item: "shellfish", type: "cannot" },
+    { item: "peppers", type: "cannot" },
+    { item: "black pepper", type: "cannot" },
     { item: "dairy", type: "willnot" },
     { item: "red meat", type: "willnot" },
   ],
@@ -51,8 +51,8 @@ export default function ProfilePage() {
           // For now, using sample data since API doesn't return real data yet
           setProfileData({
             restrictions: [
-              { item: "gluten", type: "cannot" },
-              { item: "soy", type: "willnot" },
+              { item: "black pepper", type: "cannot" },
+              { item: "peppers", type: "cannot" },
             ],
           });
         })

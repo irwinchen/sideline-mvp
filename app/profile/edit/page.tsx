@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "components/ui/button";
 import { Card } from "components/ui/card";
+import { Input } from "components/ui/input";
 import DietarySummaryCard from "components/ui/dietary-summary-card";
 import RestrictionsChecklist from "components/ui/restrictions-checklist";
 import ChatInterface from "components/ui/chat-interface";
@@ -22,6 +23,8 @@ export default function EditProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState<Language>("en");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   const [restrictions, setRestrictions] = useState([
     { item: "peanuts", type: "cannot" as const },
@@ -68,6 +71,11 @@ export default function EditProfilePage() {
   };
 
   const handleSave = async () => {
+    if (!firstName.trim() || !lastName.trim()) {
+      setError("First name and last name are required");
+      return;
+    }
+
     try {
       setIsLoading(true);
       setError(null);
@@ -84,6 +92,8 @@ export default function EditProfilePage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          firstName,
+          lastName,
           restrictions,
           updatedAt: new Date().toISOString(),
         }),
@@ -150,6 +160,41 @@ export default function EditProfilePage() {
           {error}
         </div>
       )}
+
+      <Card className="p-6">
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div>
+            <label
+              htmlFor="firstName"
+              className="block text-sm font-medium mb-2"
+            >
+              First Name
+            </label>
+            <Input
+              id="firstName"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Enter your first name"
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="lastName"
+              className="block text-sm font-medium mb-2"
+            >
+              Last Name
+            </label>
+            <Input
+              id="lastName"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Enter your last name"
+              required
+            />
+          </div>
+        </div>
+      </Card>
 
       <div
         className="bg-white rounded-lg shadow-lg overflow-hidden"

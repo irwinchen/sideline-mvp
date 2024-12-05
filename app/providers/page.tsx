@@ -12,6 +12,23 @@ export const metadata: Metadata = {
 export default function ProvidersPage() {
   return (
     <main className="container mx-auto px-4 py-24 max-w-7xl">
+      {/* New Event Planning Section */}
+      <div className="bg-blue-50 rounded-lg p-8 mb-12">
+        <h2 className="text-3xl font-bold mb-4">
+          Planning a dinner party or an event?
+        </h2>
+        <p className="text-xl text-gray-700 mb-6">
+          Make your event planning easier by collecting your guests' dietary
+          restrictions and food allergies in one place. Create a custom link to
+          share with your guests and get organized before the big day.
+        </p>
+        <Link href="/providers/events/create">
+          <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+            Create Event Link
+          </Button>
+        </Link>
+      </div>
+
       <h1 className="text-4xl font-bold mb-8">Partner with Sideline</h1>
       <p className="text-xl text-gray-600 mb-12">
         Join us in transforming how you anticipate and exceed customer

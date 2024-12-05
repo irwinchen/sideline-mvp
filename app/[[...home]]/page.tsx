@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { QrCode, Globe, Shield, Share2 } from "lucide-react";
 import { Card } from "components/ui/card";
-import { Button } from "components/ui/button";
+import { AuthButtons } from "./components/auth-buttons";
 
 export default function HomePage() {
   return (
@@ -20,9 +20,7 @@ export default function HomePage() {
             Share your dietary requirements instantly with restaurants and hosts
             - in their language, with confidence that they understand.
           </p>
-          <Button asChild size="lg">
-            <Link href="/sign-up">Create Your Profile</Link>
-          </Button>
+          <AuthButtons />
         </div>
 
         {/* Features Grid */}
@@ -62,19 +60,6 @@ export default function HomePage() {
             </footer>
           </blockquote>
         </Card>
-
-        {/* CTA Section */}
-        <div className="space-y-8">
-          <h2 className="text-3xl font-bold text-primary">
-            Ready to Make Dining Safer?
-          </h2>
-          <p className="text-muted-foreground">
-            Join thousands of members who dine with confidence.
-          </p>
-          <Button asChild size="lg">
-            <Link href="/sign-up">Get Started Free</Link>
-          </Button>
-        </div>
       </div>
     </main>
   );

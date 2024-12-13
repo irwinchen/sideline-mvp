@@ -1,20 +1,70 @@
 "use client";
 
-import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
+import React from "react";
 
-function ErrorFallback({ error }: { error: Error }) {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <h2 className="text-lg font-semibold">Something went wrong:</h2>
-      <pre className="mt-2 rounded bg-red-50 p-4">{error.message}</pre>
-    </div>
-  );
+interface Props {
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
 }
 
-export function ErrorBoundary({ children }: { children: React.ReactNode }) {
-  return (
-    <ReactErrorBoundary FallbackComponent={ErrorFallback}>
-      {children}
-    </ReactErrorBoundary>
-  );
+interface State {
+  hasError: boolean;
+  error?: Error;
+}
+
+export class ErrorBoundary extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): State {
+    return {
+      hasError: true,
+      error,
+    };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("Error caught by boundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return (
+        this.props.fallback || (
+          <div className="p-4 rounded-lg bg-red-50 border border-red-200">
+            <h2 className="text-lg font-semibold text-red-800 mb-2">
+              Something went wrong
+            </h2>
+            <p className="text-red-600 mb-4">
+              {this.state.error?.message || "An unexpected error occurred"}
+            </p>
+            <button
+              onClick={() => this.setState({ hasError: false })}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+            >
+              Try again
+            </button>
+          </div>
+        )
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+export function withErrorBoundary<P extends object>(
+  Component: React.ComponentType<P>,
+  fallback?: React.ReactNode
+) {
+  return function WithErrorBoundary(props: P) {
+    return (
+      <ErrorBoundary fallback={fallback}>
+        <Component {...props} />
+      </ErrorBoundary>
+    );
+  };
 }

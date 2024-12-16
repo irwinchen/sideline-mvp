@@ -14,34 +14,38 @@ export default async function ProfileLayout({
   const isAuthenticated = !!authData.userId;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        <div className="max-w-2xl mx-auto">
-          {isAuthenticated && (
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center">
-                <UserButton
-                  afterSignOutUrl="/"
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-12 h-12",
-                    },
-                  }}
-                />
-                <div className="text-lg font-semibold text-gray-800 ml-6">
-                  My Profile
-                </div>
+    <div className="flex flex-col h-[calc(100vh-4rem)]">
+      {" "}
+      {/* Account for main nav */}
+      {isAuthenticated && (
+        <div className="flex-none bg-white border-b border-gray-200">
+          <div className="flex items-center justify-between px-8 py-4">
+            <div className="flex items-center">
+              <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    avatarBox: "w-12 h-12",
+                  },
+                }}
+              />
+              <div className="text-lg font-semibold text-gray-800 ml-6">
+                My Profile
               </div>
-              <Link href="/profile/edit">
-                <Button variant="outline" size="sm">
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Profile
-                </Button>
-              </Link>
             </div>
-          )}
-          {children}
+            <Link href="/profile/edit">
+              <Button variant="outline" size="sm">
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Profile
+              </Button>
+            </Link>
+          </div>
         </div>
+      )}
+      <div className="flex-1 min-h-0">
+        {" "}
+        {/* Enable scrolling in children */}
+        {children}
       </div>
     </div>
   );

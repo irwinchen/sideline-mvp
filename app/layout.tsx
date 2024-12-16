@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import { Providers } from "./providers";
 import { ErrorBoundary } from "components/error-boundary";
 import Navigation from "components/ui/navigation";
-import Footer from "components/ui/footer";
+import ConditionalFooter from "./components/conditional-footer";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -37,10 +37,8 @@ export default async function RootLayout({
         <ErrorBoundary>
           <Providers>
             <Navigation />
-            <main className="flex-1 pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-              <div className="py-8">{children}</div>
-            </main>
-            <Footer />
+            <main className="flex-1">{children}</main>
+            <ConditionalFooter />
           </Providers>
         </ErrorBoundary>
       </body>

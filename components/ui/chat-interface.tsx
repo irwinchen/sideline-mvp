@@ -5,12 +5,12 @@ import { Button } from "./button";
 import { ScrollArea } from "./scroll-area";
 import { Input } from "./input";
 import { Send } from "lucide-react";
-import { nlpService } from "@/lib/client/nlp-service";
+import { nlpService } from "lib/client/nlp-service";
 import {
   storageService,
   type Restriction,
   type Profile,
-} from "@/lib/client/storage-service";
+} from "lib/client/storage-service";
 
 type Message = {
   id: string;
@@ -84,29 +84,39 @@ export default function ChatInterface({
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Initialize chat with existing profile data
   useEffect(() => {
-    const profile = storageService.getProfile(profileId);
-    if (profile) {
-      setCurrentProfile(profile);
-      const hasExistingRestrictions = profile.restrictions.length > 0;
-      setMessages(generateInitialMessages(hasExistingRestrictions));
-      onUpdateRestrictions(profile.restrictions);
-    } else {
-      // Create new profile if it doesn't exist
-      const newProfile = storageService.createProfile(profileId);
-      setCurrentProfile(newProfile);
-      setMessages(generateInitialMessages(false));
-      onUpdateRestrictions([]);
+    const initializeChat = () => {
+      const profile = storageService.getProfile(profileId);
+      if (profile) {
+        setCurrentProfile(profile);
+        const hasExistingRestrictions = profile.restrictions.length > 0;
+        setMessages(generateInitialMessages(hasExistingRestrictions));
+        onUpdateRestrictions(profile.restrictions);
+      } else {
+        // Create new profile if it doesn't exist
+        const newProfile = storageService.createProfile(profileId);
+        setCurrentProfile(newProfile);
+        setMessages(generateInitialMessages(false));
+        onUpdateRestrictions([]);
+      }
+      setIsInitialized(true);
+    };
+
+    if (!isInitialized) {
+      initializeChat();
     }
-  }, [profileId, onUpdateRestrictions]);
+  }, [profileId, onUpdateRestrictions, isInitialized]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,7 +161,7 @@ export default function ChatInterface({
 
   const handleSendMessage = () => {
     const messageToSend = inputValue.trim();
-    if (!messageToSend) return;
+    if (!messageToSend || !isInitialized) return;
 
     // Add user message
     const userMessage: Message = {
@@ -159,6 +169,8 @@ export default function ChatInterface({
       type: "user",
       content: messageToSend,
     };
+
+    setMessages((prev) => [...prev, userMessage]);
 
     // Process user input and get new restrictions
     const newRestrictions = processUserInput(messageToSend);
@@ -170,18 +182,34 @@ export default function ChatInterface({
       content: generateBotResponse(messageToSend, newRestrictions),
     };
 
-    setMessages((prev) => [...prev, userMessage, botResponse]);
+    // Use setTimeout to ensure messages appear in sequence
+    setTimeout(() => {
+      setMessages((prev) => [...prev, botResponse]);
+    }, 100);
+
     setInputValue("");
 
     // Focus the input after sending
     inputRef.current?.focus();
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  if (!isInitialized) {
+    return null; // Don't render until initialization is complete
+  }
+
   return (
-    <div className="flex flex-col h-full border rounded-lg shadow-sm">
-      <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-[400px] px-4 py-4">
-          <div className="space-y-4">
+    <div className="flex flex-col h-full">
+      {/* Messages area with ScrollArea component */}
+      <div className="flex-1 min-h-0">
+        <ScrollArea className="h-full">
+          <div className="space-y-4 p-6">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -205,18 +233,14 @@ export default function ChatInterface({
         </ScrollArea>
       </div>
 
-      <div className="border-t p-4 bg-white">
+      {/* Input area */}
+      <div className="border-t bg-white p-4">
         <div className="flex items-center gap-2">
           <Input
             ref={inputRef}
             value={inputValue}
             onChange={handleInputChange}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
-              }
-            }}
+            onKeyDown={handleKeyDown}
             placeholder="Type your dietary restrictions..."
             className="flex-1"
             autoComplete="off"

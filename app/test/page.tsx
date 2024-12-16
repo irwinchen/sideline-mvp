@@ -79,7 +79,10 @@ export default function TestPage() {
         >
           <div className="grid grid-cols-2 h-full divide-x">
             <div className="flex flex-col h-full">
-              <ChatInterface onUpdateRestrictions={handleUpdateRestrictions} />
+              <ChatInterface
+                profileId="test-profile"
+                onUpdateRestrictions={handleUpdateRestrictions}
+              />
             </div>
             <div className="flex flex-col h-full">
               <RestrictionsChecklist

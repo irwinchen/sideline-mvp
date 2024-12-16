@@ -6,7 +6,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Providers | Sideline",
   description:
-    "Partner with Sideline to better serve your customers' food needs",
+    "Partner with Sideline to better serve your customers&apos; food needs",
 };
 
 export default function ProvidersPage() {
@@ -18,9 +18,9 @@ export default function ProvidersPage() {
           Planning a dinner party or an event?
         </h2>
         <p className="text-xl text-gray-700 mb-6">
-          Make your event planning easier by collecting your guests' dietary
-          restrictions and food allergies in one place. Create a custom link to
-          share with your guests and get organized before the big day.
+          Make your event planning easier by collecting your guests&apos;
+          dietary restrictions and food allergies in one place. Create a custom
+          link to share with your guests and get organized before the big day.
         </p>
         <Link href="/providers/events/create">
           <Button size="lg" className="bg-blue-600 hover:bg-blue-700">

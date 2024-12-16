@@ -131,8 +131,8 @@ export default function EventGuestPage({ params }: { params: { id: string } }) {
       <Card className="p-8">
         <h1 className="text-3xl font-bold mb-2">{event.name}</h1>
         <p className="text-gray-600 mb-8">
-          {event.creatorName}'s having a {event.name.toLowerCase()} and they'd
-          like to know if you have any dietary restrictions
+          {event.creatorName}&apos;s having a {event.name.toLowerCase()} and
+          they&apos;d like to know if you have any dietary restrictions
         </p>
 
         <div className="mb-6">

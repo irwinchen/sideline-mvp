@@ -5,8 +5,8 @@ import { Button } from "./button";
 import { Card } from "./card";
 import { Label } from "./label";
 import { AlertCircle, CheckCircle2, XCircle } from "lucide-react";
-import { Restriction } from "@/lib/client/storage-service";
-import { nlpService } from "@/lib/client/nlp-service";
+import { Restriction } from "lib/client/storage-service";
+import { nlpService } from "lib/client/nlp-service";
 
 interface RestrictionsSummaryProps {
   restrictions: Restriction[];
@@ -199,8 +199,8 @@ export function RestrictionsSummary({
       {editMode && (
         <div className="mt-4 pt-4 border-t">
           <p className="text-sm text-gray-600">
-            Click the alert icon to change a restriction's type, or the X icon
-            to remove it. Changes are saved automatically.
+            Click the alert icon to change a restriction&apos;s type, or the X
+            icon to remove it. Changes are saved automatically.
           </p>
         </div>
       )}

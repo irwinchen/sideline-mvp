@@ -98,6 +98,9 @@ export default function OnboardingPage() {
     return null;
   }
 
+  // Use user's ID as temporary profile ID during onboarding
+  const tempProfileId = user?.id || "temp-profile";
+
   return (
     <main className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100">
       <ProgressSteps steps={onboardingSteps} currentStep={2} />
@@ -119,7 +122,10 @@ export default function OnboardingPage() {
           style={{ height: "600px" }}
         >
           <div className="grid grid-cols-[1fr,400px] h-full">
-            <ChatInterface onUpdateRestrictions={handleUpdateRestrictions} />
+            <ChatInterface
+              profileId={tempProfileId}
+              onUpdateRestrictions={handleUpdateRestrictions}
+            />
             <div className="grid grid-rows-2 h-full">
               <div className="h-[300px]">
                 <RestrictionsChecklist

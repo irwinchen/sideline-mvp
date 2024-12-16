@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { Button } from "components/ui/button";
 import { Card } from "components/ui/card";
 import { Input } from "components/ui/input";
@@ -20,6 +21,7 @@ const LANGUAGES = [
 
 export default function EditProfilePage() {
   const router = useRouter();
+  const { user } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState<Language>("en");
@@ -124,6 +126,9 @@ export default function EditProfilePage() {
     router.push("/profile/review");
   };
 
+  // Use user's ID as profile ID
+  const profileId = user?.id || "default-profile";
+
   return (
     <div className="max-w-6xl mx-auto space-y-8 p-4">
       <div className="flex justify-between items-center">
@@ -201,7 +206,10 @@ export default function EditProfilePage() {
         style={{ height: "600px" }}
       >
         <div className="grid grid-cols-[1fr,400px] h-full">
-          <ChatInterface onUpdateRestrictions={handleUpdateRestrictions} />
+          <ChatInterface
+            profileId={profileId}
+            onUpdateRestrictions={handleUpdateRestrictions}
+          />
           <div className="grid grid-rows-2 h-full">
             <div className="h-[300px]">
               <RestrictionsChecklist

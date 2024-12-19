@@ -41,32 +41,36 @@ function ProfileClient() {
 
   if (isLoading) {
     return (
-      <main className="flex h-[calc(100vh-theme(spacing.16))] mt-16 items-center justify-center">
-        <div className="text-gray-500">Loading profile...</div>
-      </main>
+      <div className="container mx-auto px-4 max-w-7xl">
+        <div className="flex h-[calc(100vh-14rem)] items-center justify-center">
+          <div className="text-gray-500">Loading profile...</div>
+        </div>
+      </div>
     );
   }
 
   return (
-    <main className="flex h-[calc(100vh-theme(spacing.16))] mt-16">
-      {/* Chat Section - 60% width */}
-      <div className="w-[60%] border-r border-gray-200 bg-gray-50/50">
-        <ChatInterface
-          key={profileId} // Force remount if profileId changes
-          profileId={profileId}
-          onUpdateRestrictions={handleUpdateRestrictions}
-        />
-      </div>
-      {/* Restrictions Profile Section - 40% width */}
-      <div className="w-[40%] bg-white">
-        <div className="h-full overflow-y-auto px-8 py-6">
-          <RestrictionsSummary
-            restrictions={restrictions}
+    <div className="container mx-auto px-4 max-w-7xl">
+      <div className="flex h-[calc(100vh-14rem)] rounded-lg overflow-hidden border border-gray-200">
+        {/* Chat Section - 60% width */}
+        <div className="w-[60%] border-r border-gray-200 bg-gray-50/50">
+          <ChatInterface
+            key={profileId} // Force remount if profileId changes
+            profileId={profileId}
             onUpdateRestrictions={handleUpdateRestrictions}
           />
         </div>
+        {/* Restrictions Profile Section - 40% width */}
+        <div className="w-[40%] bg-white">
+          <div className="h-full overflow-y-auto px-8 py-6">
+            <RestrictionsSummary
+              restrictions={restrictions}
+              onUpdateRestrictions={handleUpdateRestrictions}
+            />
+          </div>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }
 

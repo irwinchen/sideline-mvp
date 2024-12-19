@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import ProfileClient from "./profile-client";
 
 export const metadata: Metadata = {
-  title: "Your Dietary Profile | Sideline",
+  title: "Your Food Restrictions Profile | Sideline",
   description:
     "Manage your dietary restrictions and preferences with our intelligent chat interface.",
   openGraph: {
